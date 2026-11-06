@@ -1,0 +1,4 @@
+<resources>
+    <string name="core_ui_album_chip">Album #%1$d</string>
+    <string name="core_ui_track_chip">Track #%1$d</string>
+</resources>
