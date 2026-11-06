@@ -1,0 +1,3 @@
+<resources>
+    <string name="feature_albums_impl_load_failed">Unable to load the albums. Check your connection and try again.</string>
+</resources>
