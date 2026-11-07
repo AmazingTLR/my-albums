@@ -4,9 +4,9 @@ import app.cash.turbine.test
 import fr.leboncoin.core.analytics.AnalyticsEvent
 import fr.leboncoin.core.analytics.AnalyticsLogger
 import fr.leboncoin.core.common.exception.DataUnavailableException
-import fr.leboncoin.core.model.Album
+import fr.leboncoin.core.model.AlbumGroup
 import fr.leboncoin.core.testing.CoroutinesRule
-import fr.leboncoin.core.usecase.GetAlbumsUseCase
+import fr.leboncoin.core.usecase.GetAlbumGroupsUseCase
 import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.verify
@@ -20,23 +20,23 @@ class AlbumsViewModelTest {
     @get:Rule
     val coroutinesRule = CoroutinesRule()
 
-    private val getAlbumsUseCase = mockk<GetAlbumsUseCase>()
+    private val getAlbumGroupsUseCase = mockk<GetAlbumGroupsUseCase>()
     private val analyticsLogger = mockk<AnalyticsLogger>(relaxUnitFun = true)
 
-    private fun newSut() = AlbumsViewModel(getAlbumsUseCase, analyticsLogger)
+    private fun newSut() = AlbumsViewModel(getAlbumGroupsUseCase, analyticsLogger)
 
     @Test
-    fun `emits Success with the albums once loaded`() = runTest {
+    fun `emits Success with the album groups once loaded`() = runTest {
         // Given
-        val albums = listOf(album(1), album(2))
-        coEvery { getAlbumsUseCase() } returns GetAlbumsUseCase.Result.Success(albums)
+        val groups = listOf(group(1), group(2))
+        coEvery { getAlbumGroupsUseCase() } returns GetAlbumGroupsUseCase.Result.Success(groups)
 
         // When
         val sut = newSut()
 
         // Then
         sut.uiState.test {
-            assertEquals(AlbumsUiState.Success(albums), expectMostRecentItem())
+            assertEquals(AlbumsUiState.Success(groups), expectMostRecentItem())
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -44,7 +44,7 @@ class AlbumsViewModelTest {
     @Test
     fun `emits an empty Success when there is no album`() = runTest {
         // Given
-        coEvery { getAlbumsUseCase() } returns GetAlbumsUseCase.Result.Empty
+        coEvery { getAlbumGroupsUseCase() } returns GetAlbumGroupsUseCase.Result.Empty
 
         // When
         val sut = newSut()
@@ -59,7 +59,7 @@ class AlbumsViewModelTest {
     @Test
     fun `emits LoadFailed when loading fails`() = runTest {
         // Given
-        coEvery { getAlbumsUseCase() } throws DataUnavailableException()
+        coEvery { getAlbumGroupsUseCase() } throws DataUnavailableException()
 
         // When
         val sut = newSut()
@@ -74,15 +74,15 @@ class AlbumsViewModelTest {
     @Test
     fun `logs an analytics event when an album is selected`() {
         // Given
-        coEvery { getAlbumsUseCase() } returns GetAlbumsUseCase.Result.Empty
+        coEvery { getAlbumGroupsUseCase() } returns GetAlbumGroupsUseCase.Result.Empty
         val sut = newSut()
 
         // When
-        sut.onAlbumSelected(album(42))
+        sut.onAlbumSelected(42)
 
         // Then
         verify { analyticsLogger.logEvent(match<AnalyticsEvent> { it.extras.single().value == "42" }) }
     }
 
-    private fun album(id: Int) = Album(id = id, albumId = 1, title = "title $id", url = "url", thumbnailUrl = "thumb")
+    private fun group(albumId: Int) = AlbumGroup(albumId = albumId, photoCount = 50, coverUrls = listOf("thumb"))
 }

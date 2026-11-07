@@ -5,11 +5,11 @@ import fr.leboncoin.core.analytics.AnalyticsLogger
 import fr.leboncoin.core.analytics.ParamKeys
 import fr.leboncoin.core.analytics.Type
 
-internal fun AnalyticsLogger.logEventAlbumSelected(itemId: Int) {
+internal fun AnalyticsLogger.logEventAlbumSelected(albumId: Int) {
     logEvent(
         AnalyticsEvent(
             type = AlbumsAnalyticsType.SelectItem,
-            extras = listOf(AnalyticsEvent.Param(AlbumsAnalyticsParamKeys.ItemId, itemId.toString())),
+            extras = listOf(AnalyticsEvent.Param(AlbumsAnalyticsParamKeys.ItemId, albumId.toString())),
         ),
     )
 }

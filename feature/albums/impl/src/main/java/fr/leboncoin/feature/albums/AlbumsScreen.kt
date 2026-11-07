@@ -15,15 +15,17 @@ import fr.leboncoin.core.designsystem.screen.LoadingScreen
 import fr.leboncoin.core.designsystem.component.AppSurface
 import fr.leboncoin.core.designsystem.theme.AppTheme
 import fr.leboncoin.core.designsystem.theme.ThemePreviews
-import fr.leboncoin.core.model.Album
-import fr.leboncoin.core.ui.AlbumItem
+import fr.leboncoin.core.model.AlbumGroup
+import fr.leboncoin.core.ui.AlbumGroupItem
 import fr.leboncoin.core.ui.analytics.TrackScreenViewEvent
 import fr.leboncoin.feature.albums.impl.R
 import org.koin.androidx.compose.koinViewModel
 
+private const val ALBUM_GROUP_CONTENT_TYPE = "album_group"
+
 @Composable
 internal fun AlbumsScreen(
-    onAlbumClick: (Album) -> Unit,
+    onAlbumClick: (albumId: Int) -> Unit,
     modifier: Modifier = Modifier,
     albumsViewModel: AlbumsViewModel = koinViewModel(),
 ) {
@@ -31,9 +33,9 @@ internal fun AlbumsScreen(
     TrackScreenViewEvent("AlbumsScreen")
     AlbumsScreen(
         uiState = uiState,
-        onAlbumClick = { album ->
-            albumsViewModel.onAlbumSelected(album)
-            onAlbumClick(album)
+        onAlbumClick = { albumId ->
+            albumsViewModel.onAlbumSelected(albumId)
+            onAlbumClick(albumId)
         },
         modifier = modifier,
     )
@@ -42,7 +44,7 @@ internal fun AlbumsScreen(
 @Composable
 internal fun AlbumsScreen(
     uiState: AlbumsUiState,
-    onAlbumClick: (Album) -> Unit,
+    onAlbumClick: (albumId: Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     AppScaffold(modifier = modifier) { contentPadding ->
@@ -57,8 +59,12 @@ internal fun AlbumsScreen(
                 verticalArrangement = Arrangement.spacedBy(AppTheme.dimensions.spaceMedium),
                 contentPadding = contentPadding,
             ) {
-                items(items = uiState.albums, key = { album -> album.id }) { album ->
-                    AlbumItem(album = album, onItemSelected = onAlbumClick)
+                items(
+                    items = uiState.groups,
+                    key = { group -> group.albumId },
+                    contentType = { ALBUM_GROUP_CONTENT_TYPE },
+                ) { group ->
+                    AlbumGroupItem(group = group, onItemSelected = onAlbumClick)
                 }
             }
         }
@@ -73,8 +79,8 @@ private fun AlbumsScreenSuccessPreview() {
             AlbumsScreen(
                 uiState = AlbumsUiState.Success(
                     listOf(
-                        Album(1, 1, "accusamus beatae ad facilis cum similique qui sunt", "", ""),
-                        Album(2, 1, "reprehenderit est deserunt velit ipsam", "", ""),
+                        AlbumGroup(albumId = 1, photoCount = 50, coverUrls = listOf("", "", "", "")),
+                        AlbumGroup(albumId = 2, photoCount = 1, coverUrls = listOf("")),
                     ),
                 ),
                 onAlbumClick = {},

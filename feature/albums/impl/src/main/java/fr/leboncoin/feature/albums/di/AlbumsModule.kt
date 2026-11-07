@@ -7,7 +7,7 @@ import org.koin.dsl.module
 val albumsModule = module {
     viewModel<AlbumsViewModel> {
         AlbumsViewModel(
-            getAlbumsUseCase = get(),
+            getAlbumGroupsUseCase = get(),
             analyticsLogger = get(),
         )
     }
