@@ -6,7 +6,7 @@ import fr.leboncoin.feature.details.DetailsNavKey
 import fr.leboncoin.feature.details.DetailsScreen
 
 fun EntryProviderScope<NavKey>.detailsEntry() {
-    entry<DetailsNavKey> {
-        DetailsScreen()
+    entry<DetailsNavKey> { key ->
+        DetailsScreen(albumId = key.albumId)
     }
 }

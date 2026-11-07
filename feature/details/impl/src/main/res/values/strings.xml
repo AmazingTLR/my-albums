@@ -1,0 +1,4 @@
+<resources>
+    <string name="feature_details_impl_load_failed">Unable to load the photos. Check your connection and try again.</string>
+    <string name="feature_details_impl_empty">This album has no photos.</string>
+</resources>

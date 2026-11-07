@@ -8,4 +8,6 @@ android {
 
 dependencies {
     api(project(":feature:details:api"))
+    implementation(project(":core:usecase"))
+    implementation(project(":core:common"))
 }

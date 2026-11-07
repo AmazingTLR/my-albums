@@ -2,6 +2,7 @@ package fr.leboncoin.core.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -25,17 +26,15 @@ import fr.leboncoin.core.model.Album
 @Composable
 fun AlbumItem(
     album: Album,
-    onItemSelected: (Album) -> Unit,
     modifier: Modifier = Modifier,
+    onItemSelected: ((Album) -> Unit)? = null,
 ) {
     val dimensions = AppTheme.dimensions
-    AppCard(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(dimensions.albumItemHeight)
-            .padding(horizontal = dimensions.spaceMedium),
-        onClick = { onItemSelected(album) },
-    ) {
+    val cardModifier = modifier
+        .fillMaxWidth()
+        .height(dimensions.albumItemHeight)
+        .padding(horizontal = dimensions.spaceMedium)
+    val content: @Composable ColumnScope.() -> Unit = {
         Row {
             AlbumThumbnail(
                 url = album.thumbnailUrl,
@@ -68,6 +67,11 @@ fun AlbumItem(
                 }
             }
         }
+    }
+    if (onItemSelected != null) {
+        AppCard(modifier = cardModifier, onClick = { onItemSelected(album) }, content = content)
+    } else {
+        AppCard(modifier = cardModifier, content = content)
     }
 }
 
