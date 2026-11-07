@@ -19,6 +19,7 @@ dependencies {
     compileOnly(libs.android.gradlePlugin)
     compileOnly(libs.kotlin.gradlePlugin)
     compileOnly(libs.compose.gradlePlugin)
+    compileOnly(libs.ksp.gradlePlugin)
 }
 
 gradlePlugin {
@@ -34,6 +35,10 @@ gradlePlugin {
         register("androidCompose") {
             id = "leboncoin.android.compose"
             implementationClass = "AndroidComposeConventionPlugin"
+        }
+        register("androidRoom") {
+            id = "leboncoin.android.room"
+            implementationClass = "AndroidRoomConventionPlugin"
         }
         register("androidFeature") {
             id = "leboncoin.android.feature"

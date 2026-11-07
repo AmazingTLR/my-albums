@@ -12,12 +12,14 @@ koin = "4.2.2"
 kotlin = "2.4.21"
 kotlinxCoroutines = "1.11.0"
 kotlinxSerializationJson = "1.12.0"
+ksp = "2.3.13"
 leakcanary = "2.14"
 lifecycle = "2.11.0"
 lifecycleViewmodelNavigation3 = "2.11.0"
 mockk = "1.14.11"
 okhttp = "5.5.1"
 retrofit = "3.0.0"
+room = "2.8.5"
 spark = "4.3.1"
 turbine = "1.2.1"
 
@@ -26,6 +28,7 @@ turbine = "1.2.1"
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 compose-gradlePlugin = { group = "org.jetbrains.kotlin", name = "compose-compiler-gradle-plugin", version.ref = "kotlin" }
+ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "symbol-processing-gradle-plugin", version.ref = "ksp" }
 
 # AndroidX
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
@@ -74,6 +77,11 @@ kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-cor
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 
+# Database
+androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+
 # Debug tooling
 leakcanary-android = { group = "com.squareup.leakcanary", name = "leakcanary-android", version.ref = "leakcanary" }
 
@@ -89,11 +97,13 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
 # Convention plugins (defined in build-logic)
 leboncoin-android-application = { id = "leboncoin.android.application", version = "unspecified" }
 leboncoin-android-library = { id = "leboncoin.android.library", version = "unspecified" }
 leboncoin-android-compose = { id = "leboncoin.android.compose", version = "unspecified" }
+leboncoin-android-room = { id = "leboncoin.android.room", version = "unspecified" }
 leboncoin-android-feature = { id = "leboncoin.android.feature", version = "unspecified" }
 leboncoin-jvm-library = { id = "leboncoin.jvm.library", version = "unspecified" }
