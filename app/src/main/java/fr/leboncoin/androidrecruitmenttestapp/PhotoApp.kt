@@ -3,6 +3,7 @@ package fr.leboncoin.androidrecruitmenttestapp
 import android.app.Application
 import fr.leboncoin.core.analytics.di.createAnalyticsModule
 import fr.leboncoin.core.common.dispatcher.di.dispatchersModule
+import fr.leboncoin.core.database.di.databaseModule
 import fr.leboncoin.core.network.di.createNetworkModule
 import fr.leboncoin.core.repository.di.repositoryModule
 import fr.leboncoin.core.usecase.di.useCaseModule
@@ -22,6 +23,7 @@ class PhotoApp : Application() {
                 dispatchersModule,
                 createAnalyticsModule(enableAnalyticsLogging = BuildConfig.DEBUG),
                 createNetworkModule(enableHttpLogging = BuildConfig.DEBUG),
+                databaseModule,
                 repositoryModule,
                 useCaseModule,
                 albumsModule,

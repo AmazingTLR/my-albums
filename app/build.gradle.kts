@@ -27,11 +27,11 @@ android {
 }
 
 dependencies {
-    // Wiring: the app is the only module that depends on the *:impl / network implementation modules.
     implementation(project(":core:common"))
     implementation(project(":core:analytics:api"))
     implementation(project(":core:analytics:impl"))
     implementation(project(":core:network:retrofit"))
+    implementation(project(":core:database:room"))
     implementation(project(":core:repository:impl"))
     implementation(project(":core:usecase"))
     implementation(project(":core:navigation"))
