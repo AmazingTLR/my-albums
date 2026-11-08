@@ -5,6 +5,11 @@ plugins {
 
 android {
     namespace = "fr.leboncoin.core.designsystem"
+
+    // Shared Compose UI test helpers
+    testFixtures {
+        enable = true
+    }
 }
 
 dependencies {
@@ -13,4 +18,9 @@ dependencies {
     implementation(platform(libs.spark.bom))
     implementation(libs.spark)
 
+    testFixturesImplementation(platform(libs.androidx.compose.bom))
+    testFixturesApi(libs.androidx.compose.ui.test)
+    testFixturesApi(libs.androidx.compose.ui.test.junit4)
+    testFixturesApi(libs.robolectric)
+    testFixturesImplementation(libs.androidx.test.core.ktx)
 }
