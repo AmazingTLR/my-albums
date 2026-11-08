@@ -22,5 +22,8 @@ dependencies {
     testFixturesApi(libs.androidx.compose.ui.test)
     testFixturesApi(libs.androidx.compose.ui.test.junit4)
     testFixturesApi(libs.robolectric)
+    testFixturesApi(libs.roborazzi)
+    testFixturesApi(libs.roborazzi.compose)
+    testFixturesApi(libs.roborazzi.junit)
     testFixturesImplementation(libs.androidx.test.core.ktx)
 }
