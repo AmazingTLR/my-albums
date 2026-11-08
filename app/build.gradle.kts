@@ -32,6 +32,7 @@ dependencies {
     implementation(project(":core:analytics:impl"))
     implementation(project(":core:network:retrofit"))
     implementation(project(":core:database:room"))
+    implementation(project(":core:datastore:preferences"))
     implementation(project(":core:repository:impl"))
     implementation(project(":core:usecase"))
     implementation(project(":core:navigation"))
@@ -43,6 +44,8 @@ dependencies {
     implementation(project(":feature:details:impl"))
     implementation(project(":feature:favorites:api"))
     implementation(project(":feature:favorites:impl"))
+    implementation(project(":feature:settings:api"))
+    implementation(project(":feature:settings:impl"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

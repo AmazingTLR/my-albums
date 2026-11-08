@@ -1,12 +1,15 @@
 package fr.leboncoin.core.designsystem.theme
 
 import android.content.res.Configuration
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.tooling.preview.Preview
 import com.adevinta.spark.SparkTheme
+import com.adevinta.spark.tokens.darkSparkColors
+import com.adevinta.spark.tokens.lightSparkColors
 
 /** Entry point to the design tokens. Backed by Spark, but exposes only app-level types. */
 object AppTheme {
@@ -24,8 +27,11 @@ object AppTheme {
 }
 
 @Composable
-fun AppTheme(content: @Composable () -> Unit) {
-    SparkTheme {
+fun AppTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit,
+) {
+    SparkTheme(colors = if (darkTheme) darkSparkColors() else lightSparkColors()) {
         CompositionLocalProvider(
             LocalDimensions provides AppDimensions(),
             content = content,

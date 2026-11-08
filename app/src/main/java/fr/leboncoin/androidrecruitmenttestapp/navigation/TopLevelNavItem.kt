@@ -8,6 +8,8 @@ import fr.leboncoin.feature.albums.AlbumsNavKey
 import fr.leboncoin.feature.albums.api.R as AlbumsApiR
 import fr.leboncoin.feature.favorites.FavoritesNavKey
 import fr.leboncoin.feature.favorites.api.R as FavoritesApiR
+import fr.leboncoin.feature.settings.SettingsNavKey
+import fr.leboncoin.feature.settings.api.R as SettingsApiR
 
 /** A tab of the bottom bar. The title string lives in the feature `api` module so `:app` needs no `impl` resource. */
 data class TopLevelNavItem(
@@ -27,5 +29,10 @@ val TopLevelNavItems: Map<NavKey, TopLevelNavItem> = linkedMapOf(
         icon = AppIcons.HeartOutlined,
         selectedIcon = AppIcons.HeartFilled,
         titleTextId = FavoritesApiR.string.feature_favorites_api_title,
+    ),
+    SettingsNavKey to TopLevelNavItem(
+        icon = AppIcons.GearOutlined,
+        selectedIcon = AppIcons.GearFilled,
+        titleTextId = SettingsApiR.string.feature_settings_api_title,
     ),
 )

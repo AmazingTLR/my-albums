@@ -1,5 +1,7 @@
 package fr.leboncoin.core.designsystem.component
 
+import com.adevinta.spark.icons.GearFill
+import com.adevinta.spark.icons.GearOutline
 import com.adevinta.spark.icons.HeartFill
 import com.adevinta.spark.icons.HeartOutline
 import com.adevinta.spark.icons.ImageFill
@@ -11,6 +13,8 @@ import com.adevinta.spark.icons.SparkIcon
 class AppIcon internal constructor(internal val spark: SparkIcon)
 
 object AppIcons {
+    val GearFilled = AppIcon(LeboncoinIcons.GearFill)
+    val GearOutlined = AppIcon(LeboncoinIcons.GearOutline)
     val HeartFilled = AppIcon(LeboncoinIcons.HeartFill)
     val HeartOutlined = AppIcon(LeboncoinIcons.HeartOutline)
     val ImageFilled = AppIcon(LeboncoinIcons.ImageFill)

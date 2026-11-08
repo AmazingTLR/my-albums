@@ -1,0 +1,8 @@
+<resources>
+    <string name="feature_settings_impl_load_failed">Unable to load your settings. Please try again.</string>
+    <string name="feature_settings_impl_save_failed">Unable to save your settings. Please try again.</string>
+    <string name="feature_settings_impl_dark_mode_preference">Dark mode</string>
+    <string name="feature_settings_impl_dark_mode_config_system_default">System default</string>
+    <string name="feature_settings_impl_dark_mode_config_light">Light</string>
+    <string name="feature_settings_impl_dark_mode_config_dark">Dark</string>
+</resources>

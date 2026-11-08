@@ -5,12 +5,14 @@ import fr.leboncoin.androidrecruitmenttestapp.di.appModule
 import fr.leboncoin.core.analytics.di.createAnalyticsModule
 import fr.leboncoin.core.common.dispatcher.di.dispatchersModule
 import fr.leboncoin.core.database.di.databaseModule
+import fr.leboncoin.core.datastore.di.dataStoreModule
 import fr.leboncoin.core.network.di.createNetworkModule
 import fr.leboncoin.core.repository.di.repositoryModule
 import fr.leboncoin.core.usecase.di.useCaseModule
 import fr.leboncoin.feature.albums.di.albumsModule
 import fr.leboncoin.feature.details.di.detailsModule
 import fr.leboncoin.feature.favorites.di.favoritesModule
+import fr.leboncoin.feature.settings.di.settingsModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -27,11 +29,13 @@ class PhotoApp : Application() {
                 createAnalyticsModule(enableAnalyticsLogging = BuildConfig.DEBUG),
                 createNetworkModule(enableHttpLogging = BuildConfig.DEBUG),
                 databaseModule,
+                dataStoreModule,
                 repositoryModule,
                 useCaseModule,
                 albumsModule,
                 detailsModule,
                 favoritesModule,
+                settingsModule,
                 appModule,
             )
         }

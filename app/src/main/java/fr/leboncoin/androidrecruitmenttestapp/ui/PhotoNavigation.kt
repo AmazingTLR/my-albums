@@ -28,6 +28,7 @@ import fr.leboncoin.feature.albums.AlbumsNavKey
 import fr.leboncoin.feature.albums.navigation.albumsEntry
 import fr.leboncoin.feature.details.navigation.detailsEntry
 import fr.leboncoin.feature.favorites.navigation.favoritesEntry
+import fr.leboncoin.feature.settings.navigation.settingsEntry
 
 @Composable
 fun PhotoNavigation(appState: PhotoAppState) {
@@ -49,6 +50,7 @@ fun PhotoNavigation(appState: PhotoAppState) {
     val entryProvider = entryProvider {
         albumsEntry(navigator)
         favoritesEntry()
+        settingsEntry()
         detailsEntry()
     }
 
