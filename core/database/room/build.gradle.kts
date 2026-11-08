@@ -6,7 +6,8 @@ plugins {
 android {
     namespace = "fr.leboncoin.core.database.room"
 
-    defaultConfig {
+    testOptions {
+        unitTests.isIncludeAndroidResources = true
     }
 }
 
@@ -17,6 +18,7 @@ dependencies {
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.android)
 
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.androidx.junit)
+    testImplementation(libs.androidx.test.core)
+    testImplementation(libs.robolectric)
 }

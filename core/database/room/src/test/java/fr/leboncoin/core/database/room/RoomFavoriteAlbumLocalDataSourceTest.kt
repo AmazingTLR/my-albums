@@ -6,11 +6,14 @@ import androidx.test.core.app.ApplicationProvider
 import fr.leboncoin.core.model.Album
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
 
+@RunWith(AndroidJUnit4::class)
 class RoomFavoriteAlbumLocalDataSourceTest {
 
     private lateinit var database: AlbumDatabase

@@ -8,6 +8,8 @@ coreKtx = "1.19.1"
 espressoCore = "3.7.0"
 junit = "4.13.2"
 junitVersion = "1.3.0"
+robolectric = "4.16.1"
+androidxTestCore = "1.7.0"
 koin = "4.2.2"
 kotlin = "2.4.21"
 kotlinxCoroutines = "1.11.0"
@@ -89,6 +91,8 @@ leakcanary-android = { group = "com.squareup.leakcanary", name = "leakcanary-and
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
+robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
+androidx-test-core = { group = "androidx.test", name = "core", version.ref = "androidxTestCore" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 
