@@ -8,7 +8,8 @@ import com.adevinta.spark.components.scaffold.Scaffold
 @Composable
 fun AppScaffold(
     modifier: Modifier = Modifier,
+    snackbarHost: @Composable () -> Unit = {},
     content: @Composable (PaddingValues) -> Unit,
 ) {
-    Scaffold(modifier = modifier, content = content)
+    Scaffold(modifier = modifier, snackbarHost = snackbarHost, content = content)
 }

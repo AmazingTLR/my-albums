@@ -1,6 +1,7 @@
 package fr.leboncoin.androidrecruitmenttestapp
 
 import android.app.Application
+import fr.leboncoin.androidrecruitmenttestapp.di.appModule
 import fr.leboncoin.core.analytics.di.createAnalyticsModule
 import fr.leboncoin.core.common.dispatcher.di.dispatchersModule
 import fr.leboncoin.core.database.di.databaseModule
@@ -29,6 +30,7 @@ class PhotoApp : Application() {
                 useCaseModule,
                 albumsModule,
                 detailsModule,
+                appModule,
             )
         }
     }
