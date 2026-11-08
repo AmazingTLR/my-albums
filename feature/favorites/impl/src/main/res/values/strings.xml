@@ -1,0 +1,5 @@
+<resources>
+    <string name="feature_favorites_impl_empty">No favorites yet. Tap the heart on an album item to add it here.</string>
+    <string name="feature_favorites_impl_load_failed">Unable to load your favorites. Please try again.</string>
+    <string name="feature_favorites_impl_favorite_failed">Unable to update your favorites. Please try again.</string>
+</resources>

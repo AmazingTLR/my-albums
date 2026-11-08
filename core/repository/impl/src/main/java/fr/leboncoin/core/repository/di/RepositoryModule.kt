@@ -12,6 +12,7 @@ val repositoryModule = module {
         AlbumRepositoryImpl(
             networkDataSource = get(),
             localDataSource = get(),
+            favoriteDataSource = get(),
             dispatcher = get<CoroutineDispatcher>(named(AppDispatchers.IO)),
         )
     }

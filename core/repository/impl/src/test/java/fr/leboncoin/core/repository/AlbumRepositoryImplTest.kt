@@ -2,19 +2,25 @@ package fr.leboncoin.core.repository
 
 import fr.leboncoin.core.common.exception.DataUnavailableException
 import fr.leboncoin.core.database.AlbumLocalDataSource
+import fr.leboncoin.core.database.FavoriteAlbumLocalDataSource
 import fr.leboncoin.core.model.Album
 import fr.leboncoin.core.model.AlbumGroup
 import fr.leboncoin.core.network.NetworkDataSource
 import fr.leboncoin.core.network.dto.AlbumDto
+import app.cash.turbine.test
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.coVerifyOrder
+import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertSame
+import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
 import org.junit.Test
 
@@ -26,9 +32,15 @@ class AlbumRepositoryImplTest {
 
     private val networkDataSource = mockk<NetworkDataSource>()
     private val localDataSource = mockk<AlbumLocalDataSource>(relaxUnitFun = true)
+    private val favoriteDataSource = mockk<FavoriteAlbumLocalDataSource>(relaxUnitFun = true)
 
     private fun TestScope.newSut() =
-        AlbumRepositoryImpl(networkDataSource, localDataSource, StandardTestDispatcher(testScheduler))
+        AlbumRepositoryImpl(
+            networkDataSource,
+            localDataSource,
+            favoriteDataSource,
+            StandardTestDispatcher(testScheduler),
+        )
 
     @Test
     fun `stores the mapped network albums then reads the groups from storage`() = runTest {
@@ -78,17 +90,41 @@ class AlbumRepositoryImplTest {
     }
 
     @Test
-    fun `returns the stored photos of an album without calling the network`() = runTest {
+    fun `observes the stored photos of an album without calling the network`() = runTest {
         // Given
         val photos = listOf(album(id = 1, albumId = 3), album(id = 2, albumId = 3))
         coEvery { localDataSource.getAlbumsById(albumId = 3) } returns photos
+        every { localDataSource.observeAlbumsById(3) } returns flowOf(photos)
+        every { favoriteDataSource.observeFavoriteIds() } returns flowOf(emptySet())
 
-        // When
-        val result = newSut().getAlbumPhotos(albumId = 3)
-
-        // Then
-        assertEquals(photos, result)
+        // When / Then
+        newSut().observeAlbumPhotos(albumId = 3).test {
+            assertEquals(photos, awaitItem())
+            awaitComplete()
+        }
         coVerify(exactly = 0) { networkDataSource.getAlbums() }
+    }
+
+    @Test
+    fun `flags the favorite photos and follows favorite changes`() = runTest {
+        // Given
+        val photos = listOf(album(id = 1, albumId = 3), album(id = 2, albumId = 3))
+        val favoriteIds = MutableStateFlow(setOf(2))
+        coEvery { localDataSource.getAlbumsById(albumId = 3) } returns photos
+        every { localDataSource.observeAlbumsById(3) } returns flowOf(photos)
+        every { favoriteDataSource.observeFavoriteIds() } returns favoriteIds
+
+        // When / Then
+        newSut().observeAlbumPhotos(albumId = 3).test {
+            assertEquals(listOf(photos[0], photos[1].copy(isFavorite = true)), awaitItem())
+
+            favoriteIds.value = setOf(1, 2)
+            assertEquals(photos.map { it.copy(isFavorite = true) }, awaitItem())
+
+            favoriteIds.value = emptySet()
+            assertEquals(photos, awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     @Test
@@ -97,27 +133,49 @@ class AlbumRepositoryImplTest {
         val photos = listOf(album(id = 1, albumId = 3))
         coEvery { localDataSource.getAlbumsById(albumId = 3) } returnsMany listOf(emptyList(), photos)
         coEvery { networkDataSource.getAlbums() } returns listOf(dto(id = 1, albumId = 3))
+        every { localDataSource.observeAlbumsById(3) } returns flowOf(photos)
+        every { favoriteDataSource.observeFavoriteIds() } returns flowOf(emptySet())
 
-        // When
-        val result = newSut().getAlbumPhotos(albumId = 3)
-
-        // Then
-        assertEquals(photos, result)
+        // When / Then
+        newSut().observeAlbumPhotos(albumId = 3).test {
+            assertEquals(photos, awaitItem())
+            awaitComplete()
+        }
         coVerify { localDataSource.replaceAll(photos) }
     }
 
     @Test
-    fun `propagates the network failure when the album is not stored and the network fails`() = runTest {
+    fun `fails when the album is not stored and the network fails`() = runTest {
         // Given
         coEvery { localDataSource.getAlbumsById(albumId = 3) } returns emptyList()
         coEvery { networkDataSource.getAlbums() } throws DataUnavailableException()
 
         // When / Then
-        try {
-            newSut().getAlbumPhotos(albumId = 3)
-            fail("Expected a DataUnavailableException")
-        } catch (_: DataUnavailableException) {
+        newSut().observeAlbumPhotos(albumId = 3).test {
+            assertTrue(awaitError() is DataUnavailableException)
         }
+    }
+
+    @Test
+    fun `observes the favorite albums from storage`() = runTest {
+        // Given
+        val favorites = listOf(album(id = 1, albumId = 3).copy(isFavorite = true))
+        every { favoriteDataSource.observeFavoriteAlbums() } returns flowOf(favorites)
+
+        // When / Then
+        newSut().observeFavoriteAlbums().test {
+            assertEquals(favorites, awaitItem())
+            awaitComplete()
+        }
+    }
+
+    @Test
+    fun `toggles the favorite in storage`() = runTest {
+        // Given / When
+        newSut().toggleAlbumFavorite(albumId = 4)
+
+        // Then
+        coVerify(exactly = 1) { favoriteDataSource.toggle(4) }
     }
 
     private fun dto(id: Int, albumId: Int) =

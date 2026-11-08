@@ -2,6 +2,7 @@ package fr.leboncoin.core.repository
 
 import fr.leboncoin.core.model.Album
 import fr.leboncoin.core.model.AlbumGroup
+import kotlinx.coroutines.flow.Flow
 
 interface AlbumRepository {
     /**
@@ -11,6 +12,10 @@ interface AlbumRepository {
      */
     suspend fun getAlbumGroups(numberOfInitialCover: Int): List<AlbumGroup>
 
-    // Returns the photos of a single album from local storage
-    suspend fun getAlbumPhotos(albumId: Int): List<Album>
+    // Observe the photos of a single album from local storage
+    fun observeAlbumPhotos(albumId: Int): Flow<List<Album>>
+
+    fun observeFavoriteAlbums(): Flow<List<Album>>
+
+    suspend fun toggleAlbumFavorite(albumId: Int)
 }

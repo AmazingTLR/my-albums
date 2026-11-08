@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -17,6 +18,7 @@ import fr.leboncoin.core.designsystem.theme.AppTheme
 import fr.leboncoin.core.designsystem.theme.ThemePreviews
 import fr.leboncoin.core.model.Album
 import fr.leboncoin.core.ui.AlbumItem
+import fr.leboncoin.core.ui.LocalAppSnackbarHostState
 import fr.leboncoin.core.ui.analytics.TrackScreenViewEvent
 import fr.leboncoin.feature.details.impl.R
 import org.koin.androidx.compose.koinViewModel
@@ -32,12 +34,24 @@ internal fun DetailsScreen(
 ) {
     val uiState by detailsViewModel.uiState.collectAsStateWithLifecycle()
     TrackScreenViewEvent("DetailsScreen")
-    DetailsScreen(uiState = uiState, modifier = modifier)
+
+    val snackbarHostState = LocalAppSnackbarHostState.current
+    val favoriteFailedMessage = stringResource(R.string.feature_details_impl_favorite_failed)
+    LaunchedEffect(detailsViewModel, snackbarHostState) {
+        detailsViewModel.favoriteFailed.collect { snackbarHostState.show(favoriteFailedMessage) }
+    }
+
+    DetailsScreen(
+        uiState = uiState,
+        onFavoriteClick = { photo -> detailsViewModel.onFavoriteClick(photo.id) },
+        modifier = modifier,
+    )
 }
 
 @Composable
 internal fun DetailsScreen(
     uiState: DetailsUiState,
+    onFavoriteClick: (Album) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     AppScaffold(modifier = modifier) { contentPadding ->
@@ -62,7 +76,7 @@ internal fun DetailsScreen(
                     key = { photo -> photo.id },
                     contentType = { ALBUM_CONTENT_TYPE },
                 ) { photo ->
-                    AlbumItem(album = photo)
+                    AlbumItem(album = photo, onFavoriteClick = onFavoriteClick)
                 }
             }
         }
@@ -78,9 +92,17 @@ private fun DetailsScreenSuccessPreview() {
                 uiState = DetailsUiState.Success(
                     listOf(
                         Album(id = 1, albumId = 1, title = "accusamus beatae ad facilis", url = "", thumbnailUrl = ""),
-                        Album(id = 2, albumId = 1, title = "reprehenderit est deserunt velit", url = "", thumbnailUrl = ""),
+                        Album(
+                            id = 2,
+                            albumId = 1,
+                            title = "reprehenderit est deserunt velit",
+                            url = "",
+                            thumbnailUrl = "",
+                            isFavorite = true,
+                        ),
                     ),
                 ),
+                onFavoriteClick = {},
             )
         }
     }
@@ -91,7 +113,7 @@ private fun DetailsScreenSuccessPreview() {
 private fun DetailsScreenEmptyPreview() {
     AppTheme {
         AppSurface {
-            DetailsScreen(uiState = DetailsUiState.Empty)
+            DetailsScreen(uiState = DetailsUiState.Empty, onFavoriteClick = {})
         }
     }
 }

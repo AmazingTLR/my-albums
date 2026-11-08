@@ -10,6 +10,7 @@ import fr.leboncoin.core.repository.di.repositoryModule
 import fr.leboncoin.core.usecase.di.useCaseModule
 import fr.leboncoin.feature.albums.di.albumsModule
 import fr.leboncoin.feature.details.di.detailsModule
+import fr.leboncoin.feature.favorites.di.favoritesModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -30,6 +31,7 @@ class PhotoApp : Application() {
                 useCaseModule,
                 albumsModule,
                 detailsModule,
+                favoritesModule,
                 appModule,
             )
         }

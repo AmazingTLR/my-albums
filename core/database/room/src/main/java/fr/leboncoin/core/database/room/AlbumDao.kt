@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import kotlinx.coroutines.flow.Flow
 
 internal data class AlbumCountRow(val albumId: Int, val photoCount: Int)
 
@@ -41,4 +42,7 @@ internal abstract class AlbumDao {
 
     @Query("SELECT * FROM albums WHERE albumId = :albumId ORDER BY id")
     abstract suspend fun getAlbumsById(albumId: Int): List<AlbumEntity>
+
+    @Query("SELECT * FROM albums WHERE albumId = :albumId ORDER BY id")
+    abstract fun observeAlbumsById(albumId: Int): Flow<List<AlbumEntity>>
 }

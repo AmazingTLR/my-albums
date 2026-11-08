@@ -11,10 +11,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import fr.leboncoin.androidrecruitmenttestapp.R
+import fr.leboncoin.androidrecruitmenttestapp.navigation.TopLevelNavItems
+import fr.leboncoin.core.designsystem.component.AppNavigationBar
+import fr.leboncoin.core.designsystem.component.AppNavigationBarItem
 import fr.leboncoin.core.designsystem.component.AppScaffold
 import fr.leboncoin.core.designsystem.component.AppSnackbarHost
 import fr.leboncoin.core.designsystem.component.AppSnackbarHostState
@@ -25,14 +27,13 @@ import fr.leboncoin.core.ui.LocalAppSnackbarHostState
 import fr.leboncoin.feature.albums.AlbumsNavKey
 import fr.leboncoin.feature.albums.navigation.albumsEntry
 import fr.leboncoin.feature.details.navigation.detailsEntry
-
-private val TopLevelKeys: Set<NavKey> = setOf(AlbumsNavKey)
+import fr.leboncoin.feature.favorites.navigation.favoritesEntry
 
 @Composable
 fun PhotoNavigation(appState: PhotoAppState) {
     val navigationState = rememberNavigationState(
         startKey = AlbumsNavKey,
-        topLevelKeys = TopLevelKeys,
+        topLevelKeys = TopLevelNavItems.keys,
     )
     val navigator = remember(navigationState) { Navigator(navigationState) }
 
@@ -47,11 +48,23 @@ fun PhotoNavigation(appState: PhotoAppState) {
 
     val entryProvider = entryProvider {
         albumsEntry(navigator)
+        favoritesEntry()
         detailsEntry()
+    }
+
+    val navigationBarItems = TopLevelNavItems.map { (navKey, item) ->
+        AppNavigationBarItem(
+            label = stringResource(item.titleTextId),
+            icon = item.icon,
+            selectedIcon = item.selectedIcon,
+            selected = navKey == navigationState.currentTopLevelKey,
+            onClick = { navigator.navigate(navKey) },
+        )
     }
 
     CompositionLocalProvider(LocalAppSnackbarHostState provides snackbarHostState) {
         AppScaffold(
+            bottomBar = { AppNavigationBar(items = navigationBarItems) },
             snackbarHost = { AppSnackbarHost(state = snackbarHostState) },
         ) { contentPadding ->
             // Screens own a Scaffold too: consume the insets here so they are not applied twice.

@@ -41,6 +41,8 @@ dependencies {
     implementation(project(":feature:albums:impl"))
     implementation(project(":feature:details:api"))
     implementation(project(":feature:details:impl"))
+    implementation(project(":feature:favorites:api"))
+    implementation(project(":feature:favorites:impl"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

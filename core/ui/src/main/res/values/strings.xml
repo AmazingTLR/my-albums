@@ -2,6 +2,8 @@
     <string name="core_ui_album_chip">Album #%1$d</string>
     <string name="core_ui_track_chip">Track #%1$d</string>
     <string name="core_ui_album_group_title">Album #%1$d</string>
+    <string name="core_ui_favorite_add">Add to favorites</string>
+    <string name="core_ui_favorite_remove">Remove from favorites</string>
     <plurals name="core_ui_album_group_photo_count">
         <item quantity="one">%1$d photo</item>
         <item quantity="other">%1$d photos</item>

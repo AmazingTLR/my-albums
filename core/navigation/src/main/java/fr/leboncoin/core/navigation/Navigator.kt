@@ -27,7 +27,8 @@ class Navigator(val state: NavigationState) {
      */
     fun goBack() {
         when (state.currentKey) {
-            state.startKey -> error("You cannot go back from the start route")
+            // Nothing to go back to: the system handles back and leaves the app.
+            state.startKey -> Unit
             state.currentTopLevelKey -> {
                 // We're at the base of the current sub stack, go back to the previous top level
                 // stack.

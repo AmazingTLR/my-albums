@@ -9,6 +9,7 @@ val detailsModule = module {
         DetailsViewModel(
             albumId = params.get(),
             getAlbumPhotosUseCase = get(),
+            toggleAlbumFavoriteUseCase = get(),
         )
     }
 }

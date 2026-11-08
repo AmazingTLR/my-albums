@@ -28,6 +28,7 @@ fun AlbumItem(
     album: Album,
     modifier: Modifier = Modifier,
     onItemSelected: ((Album) -> Unit)? = null,
+    onFavoriteClick: ((Album) -> Unit)? = null,
 ) {
     val dimensions = AppTheme.dimensions
     val cardModifier = modifier
@@ -64,6 +65,13 @@ fun AlbumItem(
                 ) {
                     AppChip(text = stringResource(R.string.core_ui_album_chip, album.albumId))
                     AppChip(text = stringResource(R.string.core_ui_track_chip, album.id))
+                    if (onFavoriteClick != null) {
+                        Spacer(Modifier.weight(1f))
+                        AlbumFavoriteButton(
+                            isFavorite = album.isFavorite,
+                            onClick = { onFavoriteClick(album) },
+                        )
+                    }
                 }
             }
         }
@@ -89,6 +97,7 @@ private fun AlbumItemPreview() {
                     thumbnailUrl = "",
                 ),
                 onItemSelected = {},
+                onFavoriteClick = {},
             )
         }
     }
