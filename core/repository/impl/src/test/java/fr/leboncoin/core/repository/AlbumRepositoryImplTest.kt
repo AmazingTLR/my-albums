@@ -10,7 +10,6 @@ import fr.leboncoin.core.network.dto.AlbumDto
 import app.cash.turbine.test
 import io.mockk.coEvery
 import io.mockk.coVerify
-import io.mockk.coVerifyOrder
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -43,9 +42,8 @@ class AlbumRepositoryImplTest {
         )
 
     @Test
-    fun `stores the mapped network albums then reads the groups from storage`() = runTest {
+    fun `reads the groups from storage without calling the network`() = runTest {
         // Given
-        coEvery { networkDataSource.getAlbums() } returns listOf(dto(id = 7, albumId = 3))
         coEvery { localDataSource.getAlbumGroups(NUMBER_OF_COVERS) } returns listOf(group(albumId = 3))
 
         // When
@@ -53,40 +51,35 @@ class AlbumRepositoryImplTest {
 
         // Then
         assertEquals(listOf(group(albumId = 3)), groups)
-        coVerifyOrder {
-            localDataSource.replaceAll(listOf(album(id = 7, albumId = 3)))
-            localDataSource.getAlbumGroups(NUMBER_OF_COVERS)
-        }
+        coVerify(exactly = 0) { networkDataSource.getAlbums() }
     }
 
     @Test
-    fun `falls back to the stored groups when the network fails`() = runTest {
+    fun `refresh stores the mapped network albums`() = runTest {
         // Given
-        coEvery { networkDataSource.getAlbums() } throws DataUnavailableException()
-        coEvery { localDataSource.getAlbumGroups(NUMBER_OF_COVERS) } returns listOf(group(albumId = 1))
+        coEvery { networkDataSource.getAlbums() } returns listOf(dto(id = 7, albumId = 3))
 
         // When
-        val groups = newSut().getAlbumGroups(NUMBER_OF_COVERS)
+        newSut().refreshAlbums()
 
         // Then
-        assertEquals(listOf(group(albumId = 1)), groups)
-        coVerify(exactly = 0) { localDataSource.replaceAll(any()) }
+        coVerify { localDataSource.replaceAll(listOf(album(id = 7, albumId = 3))) }
     }
 
     @Test
-    fun `propagates the network failure when nothing is stored`() = runTest {
+    fun `refresh propagates the network failure and keeps the stored albums`() = runTest {
         // Given
         val failure = DataUnavailableException()
         coEvery { networkDataSource.getAlbums() } throws failure
-        coEvery { localDataSource.getAlbumGroups(NUMBER_OF_COVERS) } returns emptyList()
 
         // When / Then
         try {
-            newSut().getAlbumGroups(NUMBER_OF_COVERS)
+            newSut().refreshAlbums()
             fail("Expected a DataUnavailableException")
         } catch (e: DataUnavailableException) {
             assertSame(failure, e)
         }
+        coVerify(exactly = 0) { localDataSource.replaceAll(any()) }
     }
 
     @Test

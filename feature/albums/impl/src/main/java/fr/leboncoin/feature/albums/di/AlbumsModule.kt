@@ -8,6 +8,7 @@ val albumsModule = module {
     viewModel<AlbumsViewModel> {
         AlbumsViewModel(
             getAlbumGroupsUseCase = get(),
+            refreshAlbumsUseCase = get(),
             analyticsLogger = get(),
         )
     }

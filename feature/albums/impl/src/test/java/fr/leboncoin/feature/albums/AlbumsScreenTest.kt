@@ -50,6 +50,6 @@ class AlbumsScreenTest : UiTest() {
     }
 
     private fun setScreen(uiState: AlbumsUiState, onAlbumClick: (Int) -> Unit = {}) {
-        composeTestRule.setContent { AppTheme { AlbumsScreen(uiState = uiState, onAlbumClick = onAlbumClick) } }
+        composeTestRule.setContent { AppTheme { AlbumsScreen(uiState = uiState, onAlbumClick = onAlbumClick, onRefresh = {}) } }
     }
 }

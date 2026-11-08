@@ -12,7 +12,8 @@ class GetAlbumGroupsUseCase(
     }
 
     /**
-     * @throws fr.leboncoin.core.common.exception.AppException when the albums cannot be retrieved.
+     * Reads the locally stored groups, [Result.Empty] when nothing has been downloaded yet.
+     * @throws fr.leboncoin.core.common.exception.AppException when the storage cannot be read.
      */
     suspend operator fun invoke(): Result {
         val groups = albumRepository.getAlbumGroups(numberOfInitialCover = AlbumGroup.DEFAULT_NUMBER_OF_COVERS_PER_GROUP)

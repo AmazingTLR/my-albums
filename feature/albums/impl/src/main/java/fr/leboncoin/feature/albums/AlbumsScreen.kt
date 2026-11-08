@@ -1,6 +1,7 @@
 package fr.leboncoin.feature.albums
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -9,6 +10,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import fr.leboncoin.core.designsystem.component.AppPullToRefreshBox
 import fr.leboncoin.core.designsystem.component.AppScaffold
 import fr.leboncoin.core.designsystem.screen.ErrorScreen
 import fr.leboncoin.core.designsystem.screen.LoadingScreen
@@ -37,6 +39,7 @@ internal fun AlbumsScreen(
             albumsViewModel.onAlbumSelected(albumId)
             onAlbumClick(albumId)
         },
+        onRefresh = albumsViewModel::onRefresh,
         modifier = modifier,
     )
 }
@@ -45,6 +48,7 @@ internal fun AlbumsScreen(
 internal fun AlbumsScreen(
     uiState: AlbumsUiState,
     onAlbumClick: (albumId: Int) -> Unit,
+    onRefresh: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     AppScaffold(modifier = modifier) { contentPadding ->
@@ -55,16 +59,23 @@ internal fun AlbumsScreen(
                 modifier = Modifier.padding(contentPadding),
             )
 
-            is AlbumsUiState.Success -> LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(AppTheme.dimensions.spaceMedium),
-                contentPadding = contentPadding,
+            is AlbumsUiState.Success -> AppPullToRefreshBox(
+                isRefreshing = uiState.isRefreshing,
+                onRefresh = onRefresh,
+                modifier = Modifier.fillMaxSize(),
             ) {
-                items(
-                    items = uiState.groups,
-                    key = { group -> group.albumId },
-                    contentType = { ALBUM_GROUP_CONTENT_TYPE },
-                ) { group ->
-                    AlbumGroupItem(group = group, onItemSelected = onAlbumClick)
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(AppTheme.dimensions.spaceMedium),
+                    contentPadding = contentPadding,
+                    modifier = Modifier.fillMaxSize(),
+                ) {
+                    items(
+                        items = uiState.groups,
+                        key = { group -> group.albumId },
+                        contentType = { ALBUM_GROUP_CONTENT_TYPE },
+                    ) { group ->
+                        AlbumGroupItem(group = group, onItemSelected = onAlbumClick)
+                    }
                 }
             }
         }
@@ -84,6 +95,7 @@ private fun AlbumsScreenSuccessPreview() {
                     ),
                 ),
                 onAlbumClick = {},
+                onRefresh = {},
             )
         }
     }
@@ -94,7 +106,7 @@ private fun AlbumsScreenSuccessPreview() {
 private fun AlbumsScreenLoadFailedPreview() {
     AppTheme {
         AppSurface {
-            AlbumsScreen(uiState = AlbumsUiState.LoadFailed, onAlbumClick = {})
+            AlbumsScreen(uiState = AlbumsUiState.LoadFailed, onAlbumClick = {}, onRefresh = {})
         }
     }
 }

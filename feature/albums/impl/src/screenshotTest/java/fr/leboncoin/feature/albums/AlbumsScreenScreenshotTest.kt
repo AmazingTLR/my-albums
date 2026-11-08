@@ -34,7 +34,7 @@ class AlbumsScreenScreenshotTest : UiTest() {
     private fun capture(uiState: AlbumsUiState) {
         // The loading spinner animates forever: freeze the clock so the captured frame is stable.
         composeTestRule.mainClock.autoAdvance = false
-        composeTestRule.setContent { AppTheme { AlbumsScreen(uiState = uiState, onAlbumClick = {}) } }
+        composeTestRule.setContent { AppTheme { AlbumsScreen(uiState = uiState, onAlbumClick = {}, onRefresh = {}) } }
         composeTestRule.onRoot().captureRoboImage()
     }
 }

@@ -19,8 +19,8 @@ import kotlinx.coroutines.withContext
 import kotlin.coroutines.cancellation.CancellationException
 
 /**
- * Network first, local data source as fallback: every fetch replaces the stored data
- * All read are done by the local data source.
+ * Offline first: all reads are served by the local data source, the network only refreshes it.
+ * Every successful fetch replaces the stored data.
  */
 internal class AlbumRepositoryImpl(
     private val networkDataSource: NetworkDataSource,
@@ -33,10 +33,11 @@ internal class AlbumRepositoryImpl(
     private val fetchMutex = Mutex()
 
     override suspend fun getAlbumGroups(numberOfInitialCover: Int): List<AlbumGroup> = withContext(dispatcher) {
-        val fetchFailure = fetch()
-        localDataSource.getAlbumGroups(numberOfInitialCover).also {
-            if (it.isEmpty() && fetchFailure != null) throw fetchFailure
-        }
+        localDataSource.getAlbumGroups(numberOfInitialCover)
+    }
+
+    override suspend fun refreshAlbums() {
+        withContext(dispatcher) { fetch()?.let { throw it } }
     }
 
     override fun observeAlbumPhotos(albumId: Int): Flow<List<Album>> = flow {
